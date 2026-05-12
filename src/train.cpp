@@ -1,57 +1,72 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
-#include "train.h"
-#include <stdexcept>
 
 Train::Train() : first(nullptr), countOp(0) {}
 
 Train::~Train() {
-    if (!first) return;
-    Car* current = first->next;
-    while (current != first) {
-        Car* toDelete = current;
-        current = current->next;
-        delete toDelete;
-    }
-    delete first;
+  if (!first) return;
+  Car* current = first->next;
+  while (current != first) {
+    Car* toDelete = current;
+    current = current->next;
+    delete toDelete;
+  }
+  delete first;
 }
 
 void Train::addCar(bool light) {
-    Car* newCar = new Car(light);
-    if (!first) {
-        first = newCar;
-        first->next = first;
-        first->prev = first;
-    } else {
-        Car* last = first->prev;
-        last->next = newCar;
-        newCar->prev = last;
-        newCar->next = first;
-        first->prev = newCar;
-    }
+  Car* newCar = new Car(light);
+  if (!first) {
+    first = newCar;
+    first->next = first;
+    first->prev = first;
+  } else {
+    Car* last = first->prev;
+    last->next = newCar;
+    newCar->prev = last;
+    newCar->next = first;
+    first->prev = newCar;
+  }
 }
 
 int Train::getLength() {
-    if (!first) return 0;
-    countOp = 0;
-    Car* start = first;
-    int length = 0;
+  if (!first) return 0;
+  countOp = 0;
+  Car* start = first;
 
-    // Простой линейный обход: идём по кругу, пока не вернёмся в start
-    Car* current = start;
-    do {
-        current = current->next;
-        ++countOp;
-        ++length;
-    } while (current != start);
+  start->light = true;
 
-    return length;
+  int length = 1;
+  while (true) {
+    Car* cur = start;
+
+    for (int i = 0; i < length; ++i) {
+      cur = cur->next;
+      ++countOp;
+      if (cur == start) {
+        return length;
+      }
+      if (!cur->light) {
+        cur->light = true;
+      }
+    }
+
+    for (int i = 0; i < length; ++i) {
+      cur = cur->prev;
+      ++countOp;
+      if (cur != start) {
+        cur->light = false;
+      }
+    }
+
+    ++length;
+  }
 }
 
 int Train::getOpCount() const {
-    return countOp;
+  return countOp;
 }
 
 void Train::resetOpCount() {
-    countOp = 0;
+  countOp = 0;
 }
