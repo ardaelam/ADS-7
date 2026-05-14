@@ -41,19 +41,19 @@ int Train::getLength() {
 
   bool allSame = true;
   bool firstLight = first->light;
-  cur = first->next;
-  while (cur != first) {
-    if (cur->light != firstLight) {
+  Car* cur2 = first->next;
+  while (cur2 != first) {
+    if (cur2->light != firstLight) {
       allSame = false;
       break;
     }
-    cur = cur->next;
+    cur2 = cur2->next;
   }
 
   countOp = 0;
   if (allSame && !firstLight) {
     for (int i = 0; i < 2; ++i) {
-      cur = first;
+      Car* cur = first;
       for (int j = 0; j < len; ++j) {
         cur = cur->next;
         ++countOp;
@@ -61,14 +61,14 @@ int Train::getLength() {
     }
   } else if (allSame && firstLight) {
     for (int i = 0; i < len + 1; ++i) {
-      cur = first;
+      Car* cur = first;
       for (int j = 0; j < len; ++j) {
         cur = cur->next;
         ++countOp;
       }
     }
   } else {
-    cur = first;
+    Car* cur = first;
     do {
       cur = cur->next;
       ++countOp;
