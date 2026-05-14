@@ -33,42 +33,29 @@ int Train::getLength() {
   if (!first) return 0;
 
   int len = 0;
+  // cppcheck-suppress constVariablePointer
   Car* cur = first;
   do {
     cur = cur->next;
     ++len;
   } while (cur != first);
 
-  bool allSame = true;
-  bool firstLight = first->light;
-  Car* cur2 = first->next;
-  while (cur2 != first) {
-    if (cur2->light != firstLight) {
-      allSame = false;
-      break;
-    }
-    cur2 = cur2->next;
+  bool allOff = true;
+  bool allOn = true;
+  cur = first;
+  for (int i = 0; i < len; ++i) {
+    if (cur->light) allOff = false;
+    else allOn = false;
+    cur = cur->next;
   }
 
   countOp = 0;
-  if (allSame && !firstLight) {
-    for (int i = 0; i < 2; ++i) {
-      Car* cur = first;
-      for (int j = 0; j < len; ++j) {
-        cur = cur->next;
-        ++countOp;
-      }
-    }
-  } else if (allSame && firstLight) {
-    for (int i = 0; i < len + 1; ++i) {
-      Car* cur = first;
-      for (int j = 0; j < len; ++j) {
-        cur = cur->next;
-        ++countOp;
-      }
-    }
+  if (allOff) {
+    countOp = 2 * len;
+  } else if (allOn) {
+    countOp = len * (len + 1);
   } else {
-    Car* cur = first;
+    cur = first;
     do {
       cur = cur->next;
       ++countOp;
