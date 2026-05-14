@@ -1,3 +1,4 @@
+// Copyright 2021 NNTU-CS
 // train.h
 
 #ifndef INCLUDE_TRAIN_H_
